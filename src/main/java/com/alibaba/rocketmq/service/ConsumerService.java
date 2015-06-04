@@ -182,7 +182,7 @@ public class ConsumerService extends AbstractService {
                             // info.getDiffTotal()//
                             // );
                             Object[] tr = table.createTR();
-                            tr[0] = UtilAll.frontStringAtLeast(info.getGroup(), 32);
+                            tr[0] = UtilAll.frontStringAtLeast(info.getGroup(), info.getGroup().length() + 1);
                             tr[1] = str(info.getCount());
                             tr[2] = info.versionDesc();
                             tr[3] = info.consumeTypeDesc();
