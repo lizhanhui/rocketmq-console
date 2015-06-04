@@ -88,8 +88,8 @@ public class ConsumerService extends AbstractService {
                     // diff //
                     // );
                     Object[] tr = table.createTR();
-                    tr[0] = UtilAll.frontStringAtLeast(mq.getTopic(), 32);
-                    tr[1] = UtilAll.frontStringAtLeast(mq.getBrokerName(), 32);
+                    tr[0] = UtilAll.frontStringAtLeast(mq.getTopic(), mq.getTopic().length() + 1);
+                    tr[1] = UtilAll.frontStringAtLeast(mq.getBrokerName(), mq.getBrokerName().length() + 1);
                     tr[2] = str(mq.getQueueId());
                     tr[3] = str(offsetWrapper.getBrokerOffset());
                     tr[4] = str(offsetWrapper.getConsumerOffset());
