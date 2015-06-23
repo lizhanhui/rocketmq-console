@@ -2,7 +2,7 @@ package com.alibaba.rocketmq.service;
 
 import com.alibaba.rocketmq.common.Table;
 import com.alibaba.rocketmq.common.UtilAll;
-import com.alibaba.rocketmq.common.admin.RollbackStats;
+import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
 import com.alibaba.rocketmq.tools.command.offset.CloneGroupOffsetCommand;
 import com.alibaba.rocketmq.tools.command.offset.ResetOffsetByTimeCommand;
@@ -14,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import static com.alibaba.rocketmq.common.Tool.bool;
 import static com.alibaba.rocketmq.common.Tool.str;
@@ -61,8 +63,9 @@ public class OffsetService extends AbstractService {
                 force = bool(forceStr.trim());
             }
             defaultMQAdminExt.start();
-            List<RollbackStats> rollbackStatsList =
-                    defaultMQAdminExt.resetOffsetByTimestampOld(consumerGroup, topic, timestamp, force);
+            Map<MessageQueue, Long> rollbackStatsList =
+                    defaultMQAdminExt.resetOffsetByTimestamp(topic, consumerGroup, timestamp, force);
+
             // System.out
             // .printf(
             // "rollback consumer offset by specified consumerGroup[%s], topic[%s], force[%s], timestamp(string)[%s], timestamp(long)[%s]\n",
@@ -77,11 +80,10 @@ public class OffsetService extends AbstractService {
             // "#rollbackOffset" //
             // );
             String[] thead =
-                    new String[] { "#brokerName", "#queueId", "#brokerOffset", "#consumerOffset",
-                                  "#timestampOffset", "#rollbackOffset" };
+                    new String[] { "#brokerName", "#queueId", "#rollbackOffset" };
             Table table = new Table(thead, rollbackStatsList.size());
-
-            for (RollbackStats rollbackStats : rollbackStatsList) {
+            Set<Entry<MessageQueue, Long>> entrys = rollbackStatsList.entrySet();
+            for (Entry<MessageQueue, Long> entry : entrys) {
                 // System.out.printf("%-20s  %-20d  %-20d  %-20d  %-20d  %-20d\n",//
                 // UtilAll.frontStringAtLeast(rollbackStats.getBrokerName(),
                 // 32),//
@@ -92,12 +94,9 @@ public class OffsetService extends AbstractService {
                 // rollbackStats.getRollbackOffset() //
                 // );
                 Object[] tr = table.createTR();
-                tr[0] = UtilAll.frontStringAtLeast(rollbackStats.getBrokerName(), 32);
-                tr[1] = str(rollbackStats.getQueueId());
-                tr[2] = str(rollbackStats.getBrokerOffset());
-                tr[3] = str(rollbackStats.getConsumerOffset());
-                tr[4] = str(rollbackStats.getTimestampOffset());
-                tr[5] = str(rollbackStats.getRollbackOffset());
+                tr[0] = UtilAll.frontStringAtLeast(  entry.getKey().getBrokerName() , 64);
+                tr[1] = str(entry.getKey().getQueueId());
+                tr[2] = str(entry.getValue());
                 table.insertTR(tr);
             }
             return table;
