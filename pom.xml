@@ -28,6 +28,48 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<profiles>
+
+		<profile>
+			<id>deployCorp</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<distributionManagement>
+				<repository>
+					<id>nexus-release</id>
+					<name>Local Nexus Repository</name>
+					<url>http://172.30.10.160:8081/nexus/content/repositories/releases/</url>
+				</repository>
+
+				<snapshotRepository>
+					<id>nexus-snapshot</id>
+					<name>Local Nexus Repository</name>
+					<url>http://172.30.10.160:8081/nexus/content/repositories/snapshots/</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+
+		<profile>
+			<id>deploy</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<distributionManagement>
+				<repository>
+					<id>nexus-release</id>
+					<name>Local Nexus Repository</name>
+					<url>http://172.30.10.200:8081/nexus/content/repositories/releases/</url>
+				</repository>
+				<snapshotRepository>
+					<id>nexus-snapshot</id>
+					<name>Local Nexus Repository</name>
+					<url>http://172.30.10.200:8081/nexus/content/repositories/snapshots/</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+	</profiles>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -47,6 +89,11 @@
 		<dependency>
 			<groupId>com.alibaba.rocketmq</groupId>
 			<artifactId>rocketmq-tools</artifactId>
+			<version>${rocketmq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.rocketmq</groupId>
+			<artifactId>rocketmq-common</artifactId>
 			<version>${rocketmq.version}</version>
 		</dependency>
 		<dependency>
@@ -201,6 +248,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>

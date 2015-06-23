@@ -208,7 +208,7 @@ public class TopicService extends AbstractService {
                     String[] ns = configureInitializer.getNamesrvAddr().split(";");
                     nameServerSet = new HashSet<String>(Arrays.asList(ns));
                 }
-                adminExt.deleteTopicInNameServer(nameServerSet, topicName);
+                adminExt.deleteTopicInNameServer(nameServerSet, topicName, null);
                 return true;
             }
             else {
