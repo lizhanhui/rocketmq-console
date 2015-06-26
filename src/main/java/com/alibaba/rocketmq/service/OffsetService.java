@@ -115,8 +115,4 @@ public class OffsetService extends AbstractService {
         throw new UnsupportedOperationException("Not Supported Now");
     }
 
-    @CmdTrace(cmdClazz = ResetOffsetByTimeCommand.class)
-    public Table resetOffSetByTime() {
-        throw new UnsupportedOperationException("Not Implemented");
-    }
 }
