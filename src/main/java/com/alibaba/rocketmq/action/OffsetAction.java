@@ -39,6 +39,7 @@ public class OffsetAction extends AbstractAction {
     @RequestMapping(value = "/resetOffsetByTime.do", method = { RequestMethod.GET, RequestMethod.POST })
     public String resetOffsetByTime(ModelMap map, HttpServletRequest request,
             @RequestParam(required = false) String group, @RequestParam(required = false) String topic,
+            @RequestParam(required = false) String brokerAddress,
             @RequestParam(required = false) String timestamp, @RequestParam(required = false) String force) {
         Collection<Option> options = offsetService.getOptionsForResetOffsetByTime();
         putPublicAttribute(map, "resetOffsetByTime", options, request);
@@ -48,7 +49,7 @@ public class OffsetAction extends AbstractAction {
             }
             else if (request.getMethod().equals(POST)) {
                 checkOptions(options);
-                Table table = offsetService.resetOffsetByTime(group, topic, timestamp, force);
+                Table table = offsetService.resetOffsetByTime(group, brokerAddress, topic, timestamp, force);
                 putTable(map, table);
             }
             else {

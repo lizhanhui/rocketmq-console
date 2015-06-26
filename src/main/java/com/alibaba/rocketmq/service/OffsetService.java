@@ -6,7 +6,6 @@ import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
 import com.alibaba.rocketmq.tools.command.offset.CloneGroupOffsetCommand;
 import com.alibaba.rocketmq.tools.command.offset.ResetOffsetByTimeCommand;
-import com.alibaba.rocketmq.tools.command.offset.ResetOffsetByTimeOldCommand;
 import com.alibaba.rocketmq.validate.CmdTrace;
 import org.apache.commons.cli.Option;
 import org.slf4j.Logger;
@@ -34,7 +33,7 @@ public class OffsetService extends AbstractService {
 
     static final Logger logger = LoggerFactory.getLogger(OffsetService.class);
 
-    static final ResetOffsetByTimeOldCommand resetOffsetByTimeSubCommand = new ResetOffsetByTimeOldCommand();
+    static final ResetOffsetByTimeCommand resetOffsetByTimeSubCommand = new ResetOffsetByTimeCommand();
 
 
     public Collection<Option> getOptionsForResetOffsetByTime() {
@@ -42,8 +41,8 @@ public class OffsetService extends AbstractService {
     }
 
 
-    @CmdTrace(cmdClazz = ResetOffsetByTimeOldCommand.class)
-    public Table resetOffsetByTime(String consumerGroup, String topic, String timeStampStr, String forceStr)
+    @CmdTrace(cmdClazz = ResetOffsetByTimeCommand.class)
+    public Table resetOffsetByTime(String consumerGroup, String broker, String topic, String timeStampStr, String forceStr)
             throws Throwable {
         Throwable t = null;
         DefaultMQAdminExt defaultMQAdminExt = getDefaultMQAdminExt();
@@ -64,7 +63,7 @@ public class OffsetService extends AbstractService {
             }
             defaultMQAdminExt.start();
             Map<MessageQueue, Long> rollbackStatsList =
-                    defaultMQAdminExt.resetOffsetByTimestamp(topic, consumerGroup, timestamp, force);
+                    defaultMQAdminExt.resetOffsetByTimestamp(topic, broker, consumerGroup, timestamp, force);
 
             // System.out
             // .printf(
