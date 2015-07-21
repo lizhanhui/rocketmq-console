@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ndpmedia.rocketmq.console</groupId>
 	<artifactId>rocketmq-console</artifactId>
-	<version>3.2.2.R1</version>
+	<version>3.2.2.R2</version>
 	<packaging>war</packaging>
 	<name>RocketMQ Console</name>
 
@@ -24,51 +24,17 @@
 		<commons-cli.version>1.2</commons-cli.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 		<fastjson.version>1.1.37</fastjson.version>
-		<rocketmq.version>3.2.2.R1</rocketmq.version>
+		<rocketmq.version>3.2.2.R2</rocketmq.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
-	<profiles>
-
-		<profile>
-			<id>deployCorp</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<distributionManagement>
-				<repository>
-					<id>nexus-release</id>
-					<name>Local Nexus Repository</name>
-					<url>http://172.30.10.160:8081/nexus/content/repositories/releases/</url>
-				</repository>
-
-				<snapshotRepository>
-					<id>nexus-snapshot</id>
-					<name>Local Nexus Repository</name>
-					<url>http://172.30.10.160:8081/nexus/content/repositories/snapshots/</url>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-
-		<profile>
-			<id>deploy</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<distributionManagement>
-				<repository>
-					<id>nexus-release</id>
-					<name>Local Nexus Repository</name>
-					<url>http://172.30.10.200:8081/nexus/content/repositories/releases/</url>
-				</repository>
-				<snapshotRepository>
-					<id>nexus-snapshot</id>
-					<name>Local Nexus Repository</name>
-					<url>http://172.30.10.200:8081/nexus/content/repositories/snapshots/</url>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-	</profiles>
+	<repositories>
+		<!-- Internal Nexus Repository. GitHub user, please comment the following repository out. -->
+		<repository>
+			<id>nexus-release</id>
+			<name>Local Nexus Repository</name>
+			<url>http://172.30.10.160:8081/nexus/content/repositories/releases/</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
