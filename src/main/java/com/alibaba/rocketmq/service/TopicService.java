@@ -168,8 +168,18 @@ public class TopicService extends AbstractService {
                 Set<String> masterSet =
                         CommandUtil.fetchMasterAddrByClusterName(defaultMQAdminExt, clusterName);
                 for (String addr : masterSet) {
-                    defaultMQAdminExt.createAndUpdateTopicConfig(addr, topicConfig);
+                    int retry = 0;
+                    while (retry < 5) {
+                        try {
+                            defaultMQAdminExt.createAndUpdateTopicConfig(addr, topicConfig);
+                            break;
+                        } catch (Exception e) {
+                            logger.error("createAndUpdateTopicConfig faild:" + addr + e);
+                            retry++;
+                        }
+                    }
                 }
+
                 return true;
             }
             else {
