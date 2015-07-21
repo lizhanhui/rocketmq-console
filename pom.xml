@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ndpmedia.rocketmq.console</groupId>
 	<artifactId>rocketmq-console</artifactId>
-	<version>3.2.2</version>
+	<version>3.2.2.R1</version>
 	<packaging>war</packaging>
 	<name>RocketMQ Console</name>
 
@@ -24,7 +24,7 @@
 		<commons-cli.version>1.2</commons-cli.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 		<fastjson.version>1.1.37</fastjson.version>
-		<rocketmq.version>3.2.2</rocketmq.version>
+		<rocketmq.version>3.2.2.R1</rocketmq.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -33,7 +33,7 @@
 		<profile>
 			<id>deployCorp</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<distributionManagement>
 				<repository>
@@ -53,7 +53,7 @@
 		<profile>
 			<id>deploy</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<distributionManagement>
 				<repository>
