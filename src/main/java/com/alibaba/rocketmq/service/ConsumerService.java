@@ -7,7 +7,9 @@ import com.alibaba.rocketmq.common.UtilAll;
 import com.alibaba.rocketmq.common.admin.ConsumeStats;
 import com.alibaba.rocketmq.common.admin.OffsetWrapper;
 import com.alibaba.rocketmq.common.message.MessageQueue;
+import com.alibaba.rocketmq.common.protocol.body.Connection;
 import com.alibaba.rocketmq.common.protocol.body.ConsumerConnection;
+import com.alibaba.rocketmq.common.protocol.body.ConsumerRunningInfo;
 import com.alibaba.rocketmq.common.protocol.body.TopicList;
 import com.alibaba.rocketmq.common.protocol.heartbeat.ConsumeType;
 import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
@@ -70,9 +72,10 @@ public class ConsumerService extends AbstractService {
                 // );
                 String[] thead =
                         new String[] { "#Topic", "#Broker Name", "#QID", "#Broker Offset",
-                                      "#Consumer Offset", "#Diff" };
+                                      "#Consumer Offset", "#Diff", "clientID" };
                 long diffTotal = 0L;
                 Table table = new Table(thead, mqList.size());
+                Map<MessageQueue, String> clientConnection = this.getClientConnection(defaultMQAdminExt, consumerGroup);
                 for (MessageQueue mq : mqList) {
                     OffsetWrapper offsetWrapper = consumeStats.getOffsetTable().get(mq);
 
@@ -94,6 +97,7 @@ public class ConsumerService extends AbstractService {
                     tr[3] = str(offsetWrapper.getBrokerOffset());
                     tr[4] = str(offsetWrapper.getConsumerOffset());
                     tr[5] = str(diff);
+                    tr[6] = null == clientConnection.get(mq) ? "null" : clientConnection.get(mq);
 
                     table.insertTR(tr);
                 }
@@ -205,6 +209,23 @@ public class ConsumerService extends AbstractService {
             shutdownDefaultMQAdminExt(defaultMQAdminExt);
         }
         throw t;
+    }
+
+    private Map<MessageQueue, String> getClientConnection(DefaultMQAdminExt defaultMQAdminExt, String groupName){
+        Map<MessageQueue, String> results = new HashMap<MessageQueue, String>();
+        try{
+            ConsumerConnection consumerConnection = defaultMQAdminExt.examineConsumerConnectionInfo(groupName, 15000);
+            for (Connection connection : consumerConnection.getConnectionSet()){
+                String clinetId = connection.getClientId();
+                ConsumerRunningInfo consumerRunningInfo = defaultMQAdminExt.getConsumerRunningInfo(groupName, clinetId, false);
+                for(MessageQueue messageQueue : consumerRunningInfo.getMqTable().keySet()){
+                    results.put(messageQueue, clinetId + " " + connection.getClientAddr());
+                }
+            }
+        }catch (Exception e){
+
+        }
+        return results;
     }
 
     static final DeleteSubscriptionGroupCommand deleteSubscriptionGroupCommand =
