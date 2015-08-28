@@ -214,7 +214,7 @@ public class ConsumerService extends AbstractService {
     private Map<MessageQueue, String> getClientConnection(DefaultMQAdminExt defaultMQAdminExt, String groupName){
         Map<MessageQueue, String> results = new HashMap<MessageQueue, String>();
         try{
-            ConsumerConnection consumerConnection = defaultMQAdminExt.examineConsumerConnectionInfo(groupName, 15000);
+            ConsumerConnection consumerConnection = defaultMQAdminExt.examineConsumerConnectionInfo(groupName);
             for (Connection connection : consumerConnection.getConnectionSet()){
                 String clinetId = connection.getClientId();
                 ConsumerRunningInfo consumerRunningInfo = defaultMQAdminExt.getConsumerRunningInfo(groupName, clinetId, false);
